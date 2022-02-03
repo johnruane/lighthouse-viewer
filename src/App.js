@@ -1,23 +1,44 @@
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
+import Table from './Table';
+import { processData, flattenArray } from './lib/helpers';
 import './App.css';
 
 function App() {
+  const [stats, setStats] = useState();
+
+  const getData = async (url) => {
+    const data = await fetch(url)
+    .then((response) => response.json())
+    .catch((error) => {
+      console.log(error);
+    });
+    return data;
+  }
+
+  const getLighthouseBuildData = async () => {
+    const buildData = await getData('https://lighthouse-server.qa.reactweb-dev.digital.nbrown.co.uk/v1/projects/6199e92f-0187-4464-b628-9526001444f9/builds');
+    const buildIds = [buildData[0].id, buildData[1].id];
+
+    const statData = await getData(`https://lighthouse-server.qa.reactweb-dev.digital.nbrown.co.uk/v1/projects/6199e92f-0187-4464-b628-9526001444f9/builds/${buildIds[0]}/statistics`);
+    const prevData = await getData(`https://lighthouse-server.qa.reactweb-dev.digital.nbrown.co.uk/v1/projects/6199e92f-0187-4464-b628-9526001444f9/builds/${buildIds[1]}/statistics`);
+
+    const processedStats = flattenArray(processData(statData), 'current');
+    const processedPrev = flattenArray(processData(prevData), 'prev');
+
+    setStats(processedStats.map(v => ({ ...v, ...processedPrev.find(sp => sp.name === v.name) })));
+  }
+
+  useEffect(() => {
+    getLighthouseBuildData();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {stats ? (
+        <Table stats={stats}/>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 }
