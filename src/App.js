@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import Table from './Table';
 import { cleanBuildData, filterAndGroupData } from './lib/helpers';
