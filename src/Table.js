@@ -9,24 +9,28 @@ const r = (num) => {
   return Math.round(num * 100);
 }
 
-const Row = ({data}) => {
-  const url = data.name;
-  const { performance: p1, seo: s1, accessibility: a1, "best-practices": b1 } = data.current;
-  const { performance: p2, seo: s2, accessibility: a2, "best-practices": b2 } = data.prev;
+const Row = ({url, current, prev}) => {
 
+  if ( !current || !prev) return <></>
+
+  const metricScores = Object.assign({}, ...current);
+  const { performance: p1, seo: s1, accessibility: a1, "best-practices": b1 } = metricScores;
+
+  const prevMetricScores = Object.assign({}, ...prev);
+  const { performance: p2, seo: s2, accessibility: a2, "best-practices": b2 } = prevMetricScores;
+  
   return (
     <tr>
       <td style={{textAlign: "left"}}>{url}</td>
-      <td>{r(p1)} <span className="diff-score">{calcDiff(r(p1), r(p2))}</span></td>
-      <td>{r(s1)} <span className="diff-score">{calcDiff(r(s1), r(s2))}</span></td>
-      <td>{r(a1)} <span className="diff-score">{calcDiff(r(a1), r(a2))}</span></td>
-      <td>{r(b1)} <span className="diff-score">{calcDiff(r(b1), r(b2))}</span></td>
+      <td><span className="score">{r(p1)}</span> <span className="diff-score">{calcDiff(r(p1), r(p2))}</span></td>
+      <td><span className="score">{r(s1)}</span> <span className="diff-score">{calcDiff(r(s1), r(s2))}</span></td>
+      <td><span className="score">{r(a1)}</span> <span className="diff-score">{calcDiff(r(a1), r(a2))}</span></td>
+      <td><span className="score">{r(b1)}</span> <span className="diff-score">{calcDiff(r(b1), r(b2))}</span></td>
     </tr>
   )
 }
 
-const Table = ({stats}) => {
-  console.log(stats)
+const Table = ({data, prev}) => {
   return (
     <table className="styled-table">
       <thead>
@@ -39,8 +43,9 @@ const Table = ({stats}) => {
         </tr>
       </thead>
       <tbody>
-        {stats.map((stat) => {
-          return <Row data={stat}/>
+        {[...data].map(([key, value]) => {
+          const prevDataByCurrentKey = prev?.get(key);
+          return <Row key={key} url={key} current={value} prev={prevDataByCurrentKey}/>
          })}
       </tbody>
     </table>
