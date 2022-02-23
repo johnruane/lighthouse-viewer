@@ -5,7 +5,6 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-  font-family: 'Roboto', sans-serif;
 }
 
 .styled-table {
@@ -38,6 +37,10 @@
 
 .styled-table tbody tr:last-of-type {
   border-bottom: 2px solid #009879;
+}
+
+.styled-table .scoreWrapper {
+  white-space: nowrap;
 }
 
 .score {

@@ -1,6 +1,7 @@
 import React from 'react';
 
 const calcDiff = (cnum, pnum) => {
+  if (isNaN(pnum)) return '-';
   const diff = cnum - pnum;
   return diff > 0 ? `+${diff}` : diff;
 }
@@ -11,26 +12,25 @@ const r = (num) => {
 
 const Row = ({url, current, prev}) => {
 
-  if ( !current || !prev) return <></>
-
   const metricScores = Object.assign({}, ...current);
   const { performance: p1, seo: s1, accessibility: a1, "best-practices": b1 } = metricScores;
 
-  const prevMetricScores = Object.assign({}, ...prev);
+  const prevMetricScores = prev ? Object.assign({}, ...prev) : {};
   const { performance: p2, seo: s2, accessibility: a2, "best-practices": b2 } = prevMetricScores;
   
   return (
     <tr>
       <td style={{textAlign: "left"}}>{url}</td>
-      <td><span className="score">{r(p1)}</span> <span className="diff-score">{calcDiff(r(p1), r(p2))}</span></td>
-      <td><span className="score">{r(s1)}</span> <span className="diff-score">{calcDiff(r(s1), r(s2))}</span></td>
-      <td><span className="score">{r(a1)}</span> <span className="diff-score">{calcDiff(r(a1), r(a2))}</span></td>
-      <td><span className="score">{r(b1)}</span> <span className="diff-score">{calcDiff(r(b1), r(b2))}</span></td>
+      <td className="scoreWrapper"><span className="score">{r(p1)}</span> <span className="diff-score">{calcDiff(r(p1), r(p2))}</span></td>
+      <td className="scoreWrapper"><span className="score">{r(s1)}</span> <span className="diff-score">{calcDiff(r(s1), r(s2))}</span></td>
+      <td className="scoreWrapper"><span className="score">{r(a1)}</span> <span className="diff-score">{calcDiff(r(a1), r(a2))}</span></td>
+      <td className="scoreWrapper"><span className="score">{r(b1)}</span> <span className="diff-score">{calcDiff(r(b1), r(b2))}</span></td>
     </tr>
   )
 }
 
 const Table = ({data, prev}) => {
+  console.log(prev)
   return (
     <table className="styled-table">
       <thead>

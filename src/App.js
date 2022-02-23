@@ -49,7 +49,6 @@ function App() {
       setStatData(cleanBuildData(currentBuildData));
       // Filter data is just the entries that match the current filter option ie min, max, median that we pass to the table
       setFilteredData(filterAndGroupData(currentBuildData, filterOption));
-
       // Same as above but for the previous build
       setPrevStatData(cleanBuildData(previousBuildData));
       setPrevFilteredData(filterAndGroupData(previousBuildData, filterOption));
