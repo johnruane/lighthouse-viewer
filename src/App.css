@@ -5,6 +5,7 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
+  font-family: 'Roboto', sans-serif;
 }
 
 .styled-table {
